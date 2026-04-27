@@ -12,12 +12,17 @@ namespace handwritten {
 ThConScalarAdd::ThConScalarAdd() { }
 ThConScalarAdd::~ThConScalarAdd() { }
 
-void ThConScalarAdd::init(const core::Device &device) {
+void ThConScalarAdd::init(
+        const core::Device &device,
+        const std::string &kernel_name,
+        const std::vector<uint32_t> &runtime_args) {
     m_device = device;
     m_program = core::Program(m_device);
     m_grid = core::Grid(m_program, 0, 0);
 
-    std::string path = "mydsl/handwritten/thcon_scalar_add/device/metal/thcon_scalar_add_kernel.cpp";
+    std::string path =
+        "mydsl/handwritten/thcon_scalar_add/device/metal/"
+        + kernel_name + ".cpp";
     m_kernel =
         core::Kernel(
             m_program,
@@ -27,7 +32,12 @@ void ThConScalarAdd::init(const core::Device &device) {
             path,
             {},
             {});
-    m_kernel.set_args(m_grid, {});
+    std::vector<core::KernelArg> kargs;
+    kargs.reserve(runtime_args.size());
+    for (uint32_t v : runtime_args) {
+        kargs.emplace_back(v);
+    }
+    m_kernel.set_args(m_grid, kargs);
 }
 
 void ThConScalarAdd::run() {

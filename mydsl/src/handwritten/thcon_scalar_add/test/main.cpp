@@ -1,9 +1,9 @@
-// main.cpp — Stage B smoke test driver.
+// main.cpp — Stage C smoke test driver.
 //
-// Stage B verification: the kernel writes LOAD_VALUE (42) to an L1
-// scratch slot via STOREIND and reads it back via LOADIND. Success is
-// the TensixHandler diagnostic prints showing a round-trip match (no
-// abort). Process exits 0.
+// Stage C verification: the kernel runs the full scalar dataflow
+// pipeline (SETDMAREG / STOREIND / LOADIND / ADDDMAREG / MULDMAREG /
+// STOREIND) and produces c=142, d=4200 visible in [tensix] prints.
+// Success = no abort + the expected ADDDMAREG/MULDMAREG result lines.
 
 #include <cstdio>
 
@@ -24,7 +24,7 @@ int main() {
 
     device.close();
 
-    printf("thcon_scalar_add: kernel completed (Stage B)\n");
-    printf("RESULT: PASS  (verify round-trip via [tensix] STOREIND/LOADIND prints)\n");
+    printf("thcon_scalar_add: kernel completed (Stage C)\n");
+    printf("RESULT: PASS  (verify ADDDMAREG=0x8e MULDMAREG=0x1068 in [tensix] prints)\n");
     return 0;
 }

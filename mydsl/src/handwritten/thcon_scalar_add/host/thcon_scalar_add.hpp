@@ -6,6 +6,10 @@
 
 #pragma once
 
+#include <cstdint>
+#include <string>
+#include <vector>
+
 #include "host/core/api.hpp"
 
 namespace mydsl {
@@ -18,7 +22,12 @@ public:
     ThConScalarAdd();
     ~ThConScalarAdd();
 public:
-    void init(const core::Device &device);
+    // kernel_name: file stem under device/metal/, e.g. "thcon_scalar_add_kernel"
+    // or "thcon_atomic_inc_kernel". Default keeps Stage A/B/C behavior.
+    void init(
+        const core::Device &device,
+        const std::string &kernel_name = "thcon_scalar_add_kernel",
+        const std::vector<uint32_t> &runtime_args = {});
     void run();
 private:
     core::Device m_device;
