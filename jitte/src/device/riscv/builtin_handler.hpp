@@ -13,6 +13,7 @@
 #include "riscv/dataflow_handler.hpp"
 #include "riscv/dataflow_tanto_handler.hpp"
 #include "riscv/stdlib_handler.hpp"
+#include "riscv/tensix_handler.hpp"
 
 namespace tt {
 namespace metal {
@@ -34,6 +35,7 @@ private:
     DataflowHandler m_dataflow_handler;
     DataflowTantoHandler m_dataflow_tanto_handler;
     StdlibHandler m_stdlib_handler;
+    TensixHandler m_tensix_handler;
 };
 
 } // namespace riscv

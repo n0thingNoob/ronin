@@ -13,11 +13,13 @@
 #include "riscv/dataflow_handler.hpp"
 #include "riscv/dataflow_tanto_handler.hpp"
 #include "riscv/stdlib_handler.hpp"
+#include "riscv/tensix_handler.hpp"
 #include "riscv/builtin_compute.hpp"
 #include "riscv/builtin_compute_tanto.hpp"
 #include "riscv/builtin_dataflow.hpp"
 #include "riscv/builtin_dataflow_tanto.hpp"
 #include "riscv/builtin_stdlib.hpp"
+#include "riscv/builtin_tensix.hpp"
 #include "riscv/builtin_handler.hpp"
 
 namespace tt {
@@ -56,7 +58,8 @@ BuiltinHandler::BuiltinHandler(Machine *machine):
         m_compute_tanto_handler(machine),
         m_dataflow_handler(machine),
         m_dataflow_tanto_handler(machine),
-        m_stdlib_handler(machine) { }
+        m_stdlib_handler(machine),
+        m_tensix_handler(machine) { }
 
 BuiltinHandler::~BuiltinHandler() { }
 
@@ -109,6 +112,16 @@ void BuiltinHandler::call(Riscv32Core *core, int id) {
         int count = entry.second;
         report_call(core, name, count);
         m_stdlib_handler.call(core, id);
+        return;
+    }
+    auto &tensix_builtin_map = get_tensix_builtin_map();
+    auto it_tensix = tensix_builtin_map.find(TensixBuiltinId(id));
+    if (it_tensix != tensix_builtin_map.end()) {
+        auto &entry = it_tensix->second;
+        std::string name = entry.first;
+        int count = entry.second;
+        report_call(core, name, count);
+        m_tensix_handler.call(core, id);
         return;
     }
     // TODO: Implement coroutine-friendly error handling

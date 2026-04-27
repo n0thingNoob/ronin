@@ -32,7 +32,7 @@ using DeviceKernelBuilder = tt::metal::device::KernelBuilder;
 std::unique_ptr<DeviceKernelBuilder> g_kernel_builder(DeviceKernelBuilder::create());
 
 // TODO: Use environment variables?
-std::string g_cpp_cmd_base = "clang++ -c -O3 --target=riscv32 -nostdinc";        
+std::string g_cpp_cmd_base = "clang++ -c -O3 --target=riscv32 -nostdinc -D__JITTE__";
 
 std::string get_string_aliased_arch_lowercase(tt::ARCH arch) {
     switch (arch) {

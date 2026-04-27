@@ -17,6 +17,7 @@
 #include "riscv/builtin_dataflow.hpp"
 #include "riscv/builtin_dataflow_tanto.hpp"
 #include "riscv/builtin_stdlib.hpp"
+#include "riscv/builtin_tensix.hpp"
 
 #include "api/kernel_builder.hpp"
 
@@ -110,6 +111,11 @@ void KernelLinker::add_builtins() {
         }
     }
     for (auto &entry: get_stdlib_builtin_map()) {
+        std::string name = entry.second.first;
+        uint32_t id = uint32_t(entry.first);
+        m_linker->add_builtin(name, BUILTIN_MASK | id);
+    }
+    for (auto &entry: get_tensix_builtin_map()) {
         std::string name = entry.second.first;
         uint32_t id = uint32_t(entry.first);
         m_linker->add_builtin(name, BUILTIN_MASK | id);
